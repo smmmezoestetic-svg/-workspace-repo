@@ -1,0 +1,12 @@
+# Закрываем конфиг с ключом на случай, если его положили рядом с proxy.php,
+# а не выше корня сайта. Кладите этот файл в тот же каталог, что и proxy.php.
+
+<FilesMatch "^(config|config\.sample)\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

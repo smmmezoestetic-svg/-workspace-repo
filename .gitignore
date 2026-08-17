@@ -21,9 +21,14 @@ ENV/
 .DS_Store
 
 # Build
-dist/
+# dist/ намеренно НЕ игнорируется: собранные файлы лежат в репозитории,
+# чтобы их можно было залить на хостинг без установки Node.
 build/
 *.egg-info/
+
+# Конфиг прокси — содержит ключ Anthropic, в репозиторий не попадает
+server/config.php
+skin-test-config.php
 
 # Logs
 *.log

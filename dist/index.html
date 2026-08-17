@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Mesoforia · Подбор ухода по типу кожи</title>
+  <meta name="robots" content="noindex"/>
+
+  <link rel="stylesheet" href="./skin-test.css"/>
+
+  <!-- Google Fonts подключены неблокирующе. Обычный <link rel="stylesheet">
+       задерживает выполнение скриптов до ответа шрифтового CDN, а он у
+       российских провайдеров нередко отвечает долго или не отвечает вовсе —
+       виджет в такой ситуации не отрисовывался бы вообще. Здесь шрифты
+       приезжают отдельно и просто заменяют системные запасные из CSS. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
+
+  <style>
+    /* Страница живёт внутри iframe без собственной прокрутки:
+       высоту подгоняет embed.js на стороне сайта. */
+    html, body { margin: 0; padding: 0; background: transparent; }
+    body { overflow-x: hidden; }
+    #mesoforia-skin-test { background: var(--bg); }
+
+    /* Снимаем min-height: 100vh у корня приложения. Внутри iframe, высота
+       которого сама следует за содержимым, 100vh замыкает петлю обратной
+       связи: блок вырос → вырос и 100vh → уменьшиться он уже не может, и
+       короткие шаги занимают высоту самого длинного. */
+    #mesoforia-skin-test .app { min-height: 0; }
+  </style>
+</head>
+<body>
+  <!-- ══ НАСТРОЙКИ ═══════════════════════════════════════════════════════
+       Любой параметр можно переопределить и через query-строку iframe,
+       например: index.html?lang=en&accent=sage
+       apiUrl — адрес PHP-прокси. Пока он пустой, Vision-AI выключен и тест
+       работает на анкете + локальном анализе фото (MediaPipe).
+  -->
+  <script>
+    window.MESOFORIA_SKIN_TEST_CONFIG = {
+      lang: "ru",
+      embed: "full",
+      accent: "rose",
+      fontScale: 1,
+      shopUrl: "https://mesoforia.ru/",
+      apiUrl: "/skin-test-app/api/proxy.php"
+    };
+  </script>
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+  <div id="mesoforia-skin-test"></div>
+  <script src="./skin-test.js" defer></script>
+</body>
+</html>
