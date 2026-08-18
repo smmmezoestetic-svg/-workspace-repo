@@ -300,7 +300,10 @@ function determineSkinType(profile) {
 
 /* ============ BUILD ROUTINE ============ */
 function buildRoutine(typeKey, goals, budget) {
-  const allMatching = (cat) => PRODUCTS.filter(p => p.category === cat && p.types.includes(typeKey));
+  // Читаем window.__PRODUCTS, а не константу PRODUCTS: загрузчик каталога
+  // подменяет этот список товарами из магазина уже после инициализации.
+  const catalog = window.__PRODUCTS || PRODUCTS;
+  const allMatching = (cat) => catalog.filter(p => p.category === cat && p.types.includes(typeKey));
   const score = (p) => {
     let s = 0;
     Object.keys(goals).forEach(g => { if (goals[g] && p.goals.includes(g)) s += 2; });

@@ -38,6 +38,14 @@
        например: index.html?lang=en&accent=sage
        apiUrl — адрес PHP-прокси. Пока он пустой, Vision-AI выключен и тест
        работает на анкете + локальном анализе фото (MediaPipe).
+
+       catalogUrl — откуда брать средства:
+         "/skin-test-app/api/catalog.php" — товары из каталога Битрикса,
+              состав подбора управляется галочкой в карточке товара;
+         "/skin-test-app/products.json"   — список из файла;
+         ""                               — демо-каталог из сборки.
+              Только для просмотра: это выдуманные средства и цены,
+              на боевом сайте так оставлять нельзя.
   -->
   <script>
     window.MESOFORIA_SKIN_TEST_CONFIG = {
@@ -46,7 +54,8 @@
       accent: "rose",
       fontScale: 1,
       shopUrl: "https://mesoforia.ru/",
-      apiUrl: "/skin-test-app/api/proxy.php"
+      apiUrl: "/skin-test-app/api/proxy.php",
+      catalogUrl: ""
     };
   </script>
   <!-- ═══════════════════════════════════════════════════════════════════ -->

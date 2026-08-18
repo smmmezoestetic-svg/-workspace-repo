@@ -20,6 +20,16 @@ import "./09-analog.jsx";
 
 import App from "./10-app.jsx";
 import { startHeightReporting } from "./embed-host.js";
+import { loadCatalog, catalogState } from "./catalog.js";
+
+// Каталог начинает грузиться сразу, но отрисовку не задерживает: товары
+// нужны только на шаге результата, а до него пользователь идёт минуту.
+// Шаги, которым товары действительно нужны, ждут этот промис.
+window.__catalogReady = loadCatalog().then((products) => {
+  if (products) window.__PRODUCTS = products;
+  return products;
+});
+window.__catalogState = catalogState;
 
 function mount() {
   const el = document.getElementById("mesoforia-skin-test");

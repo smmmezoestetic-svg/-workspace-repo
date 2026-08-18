@@ -26,6 +26,8 @@ function AnalogStep({ t, lang, onBack, shopUrl }) {
     setAnalyzing(true);
     try {
       const r = await window.analyzeProductPhoto(src, lang);
+      // Аналоги ищутся по каталогу магазина — дожидаемся его загрузки.
+      if (window.__catalogReady) await window.__catalogReady.catch(() => {});
       if (!r.ok) {
         setError(r.reason || "vision-error");
         setResult(null);

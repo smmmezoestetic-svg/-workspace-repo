@@ -113,8 +113,20 @@ function ResultHeader({ t, lang, skinType, profile, photo, typeKey, analysis }) 
     typeKey === "normal" ? -2 : 0
   );
 
+  // Каталог берётся из магазина и не загрузился: показываем это честно,
+  // вместо того чтобы молча отрисовать пустые списки товаров.
+  const catalogFailed = window.__catalogState?.source === "remote" && !window.__catalogState.ok;
+
   return (
     <div className="col" style={{ gap: 28 }}>
+      {catalogFailed && (
+        <div style={{
+          padding: "16px 20px", borderRadius: "var(--r-md)",
+          background: "color-mix(in oklch, var(--warn) 10%, var(--bg-elev))",
+          border: "1px solid color-mix(in oklch, var(--warn) 35%, var(--line))",
+          fontSize: 14, color: "var(--ink-2)",
+        }}>{t("catalogUnavailable")}</div>
+      )}
       <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start", gap: 20 }}>
         <div>
           <Eyebrow>{t("resultBased")}</Eyebrow>
@@ -399,11 +411,21 @@ function ProductCard({ t, lang, product, inCart, onToggle }) {
   return (
     <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div style={{ aspectRatio: "1.1/1", background: `linear-gradient(155deg, ${c1}, ${c2})`, position: "relative", overflow: "hidden" }}>
-        <BottleSVG kind={product.category}/>
+        {product.image
+          ? <img src={product.image} alt="" loading="lazy"
+                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}/>
+          : <BottleSVG kind={product.category}/>}
         <div style={{ position: "absolute", left: 14, top: 14, fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--ink-3)", letterSpacing: 1.4, textTransform: "uppercase" }}>{product.category}</div>
       </div>
       <div style={{ padding: 18, flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: 18, lineHeight: 1.25, letterSpacing: "-0.01em" }}>{product.name[lang] || product.name.ru}</div>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 18, lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+          {product.url
+            ? <a href={product.url} target="_blank" rel="noreferrer"
+                 style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid var(--line-2)" }}>
+                {product.name[lang] || product.name.ru}
+              </a>
+            : (product.name[lang] || product.name.ru)}
+        </div>
         <div style={{ fontSize: 12, color: "var(--ink-4)" }}>{product.volume}</div>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {product.actives.slice(0,2).map(a => (

@@ -22,6 +22,9 @@ const DEFAULTS = {
   // Эндпоинт PHP-прокси. Пустая строка — AI-функции выключены,
   // тест работает на анкете и локальном анализе фото.
   apiUrl: "",
+  // Откуда брать каталог средств: catalog.php (Битрикс) или products.json.
+  // Пустая строка — используется демо-каталог, зашитый в сборку.
+  catalogUrl: "",
   // Принудительный тип кожи для демонстрации: "auto" или ключ типа
   demoType: "auto",
 };
@@ -59,6 +62,7 @@ export function getConfig() {
   merged.fontScale = Number.isFinite(fs) ? Math.min(1.25, Math.max(0.85, fs)) : 1;
   if (!isSafeUrl(merged.shopUrl)) merged.shopUrl = DEFAULTS.shopUrl;
   if (merged.apiUrl && !isSafeUrl(merged.apiUrl)) merged.apiUrl = DEFAULTS.apiUrl;
+  if (merged.catalogUrl && !isSafeUrl(merged.catalogUrl)) merged.catalogUrl = DEFAULTS.catalogUrl;
 
   cached = merged;
   return cached;

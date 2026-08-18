@@ -26,6 +26,9 @@ function ScanStep({ t, photo, profile, lang, onDone }) {
       } catch (e) {
         analysisResult = { source: "error", zones: null, metrics: null, vision: null };
       }
+      // Каталог грузится параллельно с анализом; дожидаемся его здесь, чтобы
+      // рутина собиралась уже по товарам магазина, а не по демо-списку.
+      if (window.__catalogReady) await window.__catalogReady.catch(() => {});
       analysisDone = true;
     })();
 
