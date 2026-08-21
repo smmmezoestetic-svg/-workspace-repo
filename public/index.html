@@ -46,6 +46,10 @@
          ""                               — демо-каталог из сборки.
               Только для просмотра: это выдуманные средства и цены,
               на боевом сайте так оставлять нельзя.
+
+       addToCartUrl — кладёт отобранные средства в корзину сайта.
+              Пусто — на итоговом экране остаётся ссылка в магазин.
+       cartPageUrl — страница корзины, куда ведём после добавления.
   -->
   <script>
     window.MESOFORIA_SKIN_TEST_CONFIG = {
@@ -55,7 +59,9 @@
       fontScale: 1,
       shopUrl: "https://mesoforia.ru/",
       apiUrl: "/skin-test-app/api/proxy.php",
-      catalogUrl: ""
+      catalogUrl: "",
+      addToCartUrl: "",
+      cartPageUrl: "/personal/cart/"
     };
   </script>
   <!-- ═══════════════════════════════════════════════════════════════════ -->

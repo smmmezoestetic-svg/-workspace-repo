@@ -1,4 +1,5 @@
 import React from "react";
+import { getConfig } from "./config.js";
 
 const { useState, useMemo } = React;
 
@@ -601,22 +602,105 @@ function SummaryView({ t, lang, routine, cart, totalPrice, setCart, allProducts,
           <div style={{ fontFamily: "var(--font-display)", fontSize: 26 }}>{fmt(totalPrice)}</div>
         </div>
 
-        <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: "var(--r-sm)",
-          background: "color-mix(in oklch, var(--good) 15%, var(--bg-elev))",
-          fontSize: 12, color: "var(--ink-2)",
-        }}>
-          {t("monthlyEst")}
-        </div>
-
-        <a href={shopUrl} target="_blank" rel="noreferrer" className="btn btn-accent btn-lg" style={{ width: "100%", marginTop: 16, display: "flex" }}>
-          {t("goShop")}
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M3 3h8v8M3 11l8-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-        </a>
+        <CartActions t={t} cart={cart} shopUrl={shopUrl}/>
 
         <div style={{ marginTop: 14, fontSize: 11, color: "var(--ink-4)", lineHeight: 1.5 }}>{t("disclaimer")}</div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Кнопка «в корзину» и её состояния.
+ *
+ * Когда addToCartUrl не задан, поведение прежнее — ссылка в магазин.
+ * Когда задан, отобранные средства уходят в корзину сайта одним запросом.
+ * Запрос идёт на свой же домен, поэтому сессионная кука магазина
+ * прикладывается сама и товары попадают именно в корзину этого посетителя.
+ */
+function CartActions({ t, cart, shopUrl }) {
+  const { addToCartUrl, cartPageUrl } = getConfig();
+  const [state, setState] = useState("idle"); // idle | loading | done | error
+  const [note, setNote] = useState("");
+
+  const shopLink = (
+    <a href={shopUrl} target="_blank" rel="noreferrer"
+       className={"btn btn-lg " + (addToCartUrl ? "btn-ghost" : "btn-accent")}
+       style={{ width: "100%", marginTop: addToCartUrl ? 10 : 16, display: "flex" }}>
+      {t("goShop")}
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M3 3h8v8M3 11l8-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    </a>
+  );
+
+  if (!addToCartUrl) return shopLink;
+
+  async function addToCart() {
+    if (!cart.length) {
+      setState("error");
+      setNote(t("cartAddNothing"));
+      return;
+    }
+    setState("loading");
+    setNote("");
+    try {
+      const resp = await fetch(addToCartUrl, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        // Корзина Битрикса привязана к сессии — без куки товары уйдут «в никуда».
+        credentials: "same-origin",
+        body: JSON.stringify({ ids: cart }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.ok) {
+        throw new Error(data?.error?.message || `HTTP ${resp.status}`);
+      }
+      setState("done");
+      setNote(data.added < cart.length ? t("cartAddPartial") : "");
+    } catch (error) {
+      console.error("[cart] Не удалось добавить в корзину:", error.message);
+      setState("error");
+      setNote(t("cartAddError"));
+    }
+  }
+
+  if (state === "done") {
+    return (
+      <div style={{ marginTop: 16 }}>
+        <div style={{
+          padding: "10px 12px", borderRadius: "var(--r-sm)", fontSize: 13, color: "var(--ink-2)",
+          background: "color-mix(in oklch, var(--good) 15%, var(--bg-elev))",
+        }}>
+          {t("cartAdded")}{note ? " · " + note : ""}
+        </div>
+        {/* target="_top": тест живёт в iframe, и корзина должна открыться
+            во всей странице, а не внутри блока с тестом. */}
+        <a href={cartPageUrl} target="_top" className="btn btn-accent btn-lg"
+           style={{ width: "100%", marginTop: 10, display: "flex" }}>
+          {t("cartGoTo")}
+        </a>
+        {shopLink}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ marginTop: 16 }}>
+      <button className="btn btn-accent btn-lg" onClick={addToCart}
+              disabled={state === "loading"}
+              style={{ width: "100%", display: "flex", opacity: state === "loading" ? .7 : 1 }}>
+        {state === "loading" ? t("cartAdding") : `${t("cartAdd")} · ${cart.length}`}
+      </button>
+      {state === "error" && note && (
+        <div style={{
+          marginTop: 10, padding: "10px 12px", borderRadius: "var(--r-sm)", fontSize: 13,
+          background: "color-mix(in oklch, var(--crit) 8%, var(--bg-elev))",
+          border: "1px solid color-mix(in oklch, var(--crit) 35%, var(--line))",
+          color: "var(--ink-2)",
+        }}>{note}</div>
+      )}
+      {shopLink}
     </div>
   );
 }

@@ -50,5 +50,15 @@ check('цена массивом', resolvePrice(1, false, ['VALUE' => ['2450.50'
 check('нечисловая цена — null', resolvePrice(1, false, ['VALUE' => 'дорого']), null);
 check('нет свойства цены — null', resolvePrice(1, false, null), null);
 
+echo "\nsanitizeIds:\n";
+check('обычный список', sanitizeIds(['12', 34, '56'], 20), [12, 34, 56]);
+check('повторы убираются', sanitizeIds([7, '7', 7], 20), [7]);
+check('нечисловое отбрасывается', sanitizeIds(['abc', '12x', 5], 20), [5]);
+check('ноль и отрицательные отбрасываются', sanitizeIds([0, -3, 9], 20), [9]);
+check('вложенные структуры отбрасываются', sanitizeIds([['a'], null, true, 4], 20), [4]);
+check('лимит соблюдается', sanitizeIds([1,2,3,4,5], 3), [1,2,3]);
+check('не массив', sanitizeIds('12,13', 20), []);
+check('пусто', sanitizeIds([], 20), []);
+
 echo "\nИтого: пройдено $pass, провалено $fail\n";
 exit($fail > 0 ? 1 : 0);

@@ -25,6 +25,11 @@ const DEFAULTS = {
   // Откуда брать каталог средств: catalog.php (Битрикс) или products.json.
   // Пустая строка — используется демо-каталог, зашитый в сборку.
   catalogUrl: "",
+  // Эндпоинт, который кладёт выбранные средства в корзину сайта.
+  // Пустая строка — вместо кнопки «в корзину» остаётся ссылка в магазин.
+  addToCartUrl: "",
+  // Страница корзины, куда ведём после добавления.
+  cartPageUrl: "/personal/cart/",
   // Принудительный тип кожи для демонстрации: "auto" или ключ типа
   demoType: "auto",
 };
@@ -63,6 +68,8 @@ export function getConfig() {
   if (!isSafeUrl(merged.shopUrl)) merged.shopUrl = DEFAULTS.shopUrl;
   if (merged.apiUrl && !isSafeUrl(merged.apiUrl)) merged.apiUrl = DEFAULTS.apiUrl;
   if (merged.catalogUrl && !isSafeUrl(merged.catalogUrl)) merged.catalogUrl = DEFAULTS.catalogUrl;
+  if (merged.addToCartUrl && !isSafeUrl(merged.addToCartUrl)) merged.addToCartUrl = DEFAULTS.addToCartUrl;
+  if (!isSafeUrl(merged.cartPageUrl)) merged.cartPageUrl = DEFAULTS.cartPageUrl;
 
   cached = merged;
   return cached;

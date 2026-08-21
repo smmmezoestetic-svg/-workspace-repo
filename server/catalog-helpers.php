@@ -125,3 +125,31 @@ function resolvePrice(int $id, bool $hasCatalog, ?array $priceProperty): ?float
 
     return null;
 }
+
+/**
+ * Приводит присланный виджетом список ID к безопасному виду: только
+ * положительные целые, без повторов, не больше $max штук.
+ *
+ * @return int[]
+ */
+function sanitizeIds($value, int $max): array
+{
+    if (!is_array($value)) {
+        return [];
+    }
+    $out = [];
+    foreach ($value as $item) {
+        if (is_array($item) || is_object($item) || is_bool($item) || $item === null) {
+            continue;
+        }
+        $id = filter_var((string)$item, FILTER_VALIDATE_INT);
+        if ($id === false || $id <= 0 || in_array($id, $out, true)) {
+            continue;
+        }
+        $out[] = $id;
+        if (count($out) >= $max) {
+            break;
+        }
+    }
+    return $out;
+}
