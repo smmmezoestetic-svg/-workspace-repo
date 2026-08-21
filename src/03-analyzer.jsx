@@ -185,6 +185,43 @@ async function runFaceMesh(img) {
   });
 }
 
+/**
+ * Детекция лица для проверки загруженного фото.
+ *
+ * Отдельная функция, а не runFaceMesh: там null означает и «лица нет», и
+ * «не успели за отведённое время», а для проверки эти случаи разные. Не
+ * нашли лицо — фото отклоняем; не успели или не загрузилась библиотека —
+ * отклонять нельзя, иначе недоступный CDN закроет тест всем.
+ *
+ * @returns {Promise<{available: boolean, found: boolean, timedOut: boolean}>}
+ */
+async function detectFaceLandmarks(img) {
+  const FM = await loadFaceMesh().catch(() => null);
+  if (!FM) return { available: false, found: false, timedOut: false };
+
+  const fm = new FM({
+    locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/${f}`
+  });
+  fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5 });
+
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(result);
+    };
+    const timer = setTimeout(() => finish({ available: true, found: false, timedOut: true }), 8000);
+
+    fm.onResults((res) => {
+      const faces = res.multiFaceLandmarks || [];
+      finish({ available: true, found: faces.length > 0, timedOut: false });
+    });
+    fm.send({ image: img }).catch(() => finish({ available: false, found: false, timedOut: false }));
+  });
+}
+
 function deriveMetricsFromZones(zones) {
   // Convert raw zone signals into 0-100 metrics. These are HONEST visual-only metrics.
   const cheekRed = ((zones.leftCheek?.redRatio || 0) + (zones.rightCheek?.redRatio || 0)) / 2;
@@ -357,6 +394,7 @@ async function analyzePhoto({ photo, profile, lang, onProgress }) {
 }
 
 window.analyzePhoto = analyzePhoto;
+window.detectFaceLandmarks = detectFaceLandmarks;
 window.__ZONE_LANDMARKS = ZONE_LANDMARKS;
 
 /* ============ PRODUCT ANALOG FINDER ============

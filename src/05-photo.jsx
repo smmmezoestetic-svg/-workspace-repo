@@ -23,7 +23,22 @@ async function validatePhoto(dataUrl) {
     return { ok: false, reason: "tooSmall" };
   }
 
-  // Try native FaceDetector first
+  // MediaPipe Face Mesh — единственная настоящая детекция лица, которая тут
+  // доступна. Нативный FaceDetector в браузерах практически не встречается
+  // (в Chrome он за флагом), поэтому без этого шага всё сводилось к цветовой
+  // эвристике, а она пропускает любой предмет телесного оттенка — например
+  // ампулу янтарного стекла.
+  if (window.detectFaceLandmarks) {
+    const mesh = await window.detectFaceLandmarks(img).catch(() => null);
+    if (mesh?.found) return { ok: true, reason: null, source: "mesh" };
+    if (mesh?.available && !mesh.timedOut) {
+      return { ok: false, reason: "noFace", source: "mesh" };
+    }
+    // Библиотека не загрузилась или не успела — отклонять по этому поводу
+    // нельзя, иначе недоступный CDN закроет тест всем. Идём в эвристику.
+  }
+
+  // Native FaceDetector, где он всё-таки есть
   if (window.FaceDetector) {
     try {
       const det = new window.FaceDetector({ fastMode: true, maxDetectedFaces: 3 });
@@ -83,11 +98,17 @@ async function validatePhoto(dataUrl) {
   // Cells where >40% skin pixels
   let skinCells = 0;
   let skinCenterX = 0, skinCenterY = 0;
+  let minCellX = gx, maxCellX = -1, minCellY = gy, maxCellY = -1;
   for (let i = 0; i < grid.length; i++) {
     if (grid[i] / cellTotal[i] > 0.4) {
+      const cx = i % gx, cy = Math.floor(i / gx);
       skinCells++;
-      skinCenterX += (i % gx) + 0.5;
-      skinCenterY += Math.floor(i / gx) + 0.5;
+      skinCenterX += cx + 0.5;
+      skinCenterY += cy + 0.5;
+      if (cx < minCellX) minCellX = cx;
+      if (cx > maxCellX) maxCellX = cx;
+      if (cy < minCellY) minCellY = cy;
+      if (cy > maxCellY) maxCellY = cy;
     }
   }
 
@@ -100,6 +121,17 @@ async function validatePhoto(dataUrl) {
   const avgY = skinCenterY / Math.max(1, skinCells);
   if (avgY / gy > 0.85) return { ok: false, reason: "noFace" };
 
+  // Форма пятна. Лицо примерно так же широко, как высоко; флакон, ампула или
+  // рука дают узкий вертикальный столбик, а полка или стол — плоскую полосу.
+  // Порог намеренно мягкий: отсекаем явно непохожее, не трогая портреты,
+  // снятые впритык или под углом.
+  const blobW = maxCellX - minCellX + 1;
+  const blobH = maxCellY - minCellY + 1;
+  const aspect = blobW / blobH;
+  if (aspect < 0.4 || aspect > 3) {
+    return { ok: false, reason: "noFace", source: "shape", aspect };
+  }
+
   // Variation check: stddev of luminance in skin cells (very low = solid color, fail)
   const lumas = [];
   for (let i = 0; i < data.length; i += 4*16) {
@@ -110,7 +142,7 @@ async function validatePhoto(dataUrl) {
   const stddev = Math.sqrt(variance);
   if (stddev < 12) return { ok: false, reason: "tooFlat" };
 
-  return { ok: true, reason: null, source: "heuristic", skinRatio };
+  return { ok: true, reason: null, source: "heuristic", skinRatio, aspect };
 }
 
 window.validatePhoto = validatePhoto;
@@ -126,8 +158,11 @@ function PhotoStep({ t, onNext, onBack, photo, setPhoto }) {
 
   async function handleNewPhoto(payload) {
     setError(null);
-    if (payload.type === "demo" || payload.type === "camera") {
-      // Demo/synthetic photo — always valid
+    // Демо-фото — нарисованная картинка, лица на ней нет по определению,
+    // проверять его нечем и незачем. Снимок с камеры — обычное фото, и
+    // проверяется наравне с загруженным файлом: иначе объектив можно было бы
+    // навести на что угодно и пройти дальше.
+    if (payload.type === "demo") {
       setPhoto(payload);
       return;
     }
