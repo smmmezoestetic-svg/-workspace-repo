@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Проверка вставки · Mesoforia Skin Test</title>
+  <style>
+    body { font: 16px/1.6 -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; color: #1a1814; }
+    .page { max-width: 1180px; margin: 0 auto; padding: 0 20px 80px; }
+    .fake-header, .fake-footer {
+      background: #1a1814; color: #fff; padding: 20px; text-align: center; letter-spacing: .1em;
+      font-size: 13px; text-transform: uppercase;
+    }
+    h1 { font-weight: 500; }
+    .note { color: #6b655c; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <!-- Шапка и подвал здесь только для того, чтобы увидеть, как блок теста
+       ведёт себя внутри обычной страницы сайта. -->
+  <div class="fake-header">Шапка сайта</div>
+
+  <div class="page">
+    <h1>Подбор ухода по типу кожи</h1>
+    <p class="note">Ниже — виджет ровно в том виде, в каком он встанет на mesoforia.ru/skin-test/.</p>
+
+    <div data-mesoforia-skin-test data-src="./index.html"></div>
+
+    <p class="note">Блок сам меняет высоту при переходе между шагами — своей полосы прокрутки у теста нет.</p>
+  </div>
+
+  <div class="fake-footer">Подвал сайта</div>
+
+  <script src="./embed.js" defer></script>
+</body>
+</html>

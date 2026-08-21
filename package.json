@@ -1,0 +1,19 @@
+{
+  "name": "mesoforia-skin-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Виджет подбора ухода по типу кожи для mesoforia.ru",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "check": "node build.mjs --check",
+    "preview": "node build.mjs && node build-preview.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

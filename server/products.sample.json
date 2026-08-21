@@ -1,0 +1,503 @@
+{
+  "version": 1,
+  "products": [
+    {
+      "id": "p01",
+      "category": "cleanser",
+      "name": {
+        "ru": "Гель «Aqua Pure» очищающий",
+        "en": "Aqua Pure cleansing gel"
+      },
+      "price": 1890,
+      "volume": "150 мл",
+      "actives": [
+        "PHA",
+        "Allantoin"
+      ],
+      "types": [
+        "normal",
+        "oily",
+        "combo",
+        "acne"
+      ],
+      "goals": [
+        "acne",
+        "pores",
+        "glow"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p02",
+      "category": "cleanser",
+      "name": {
+        "ru": "Молочко «Velvet» деликатное",
+        "en": "Velvet gentle milk"
+      },
+      "price": 2150,
+      "volume": "150 мл",
+      "actives": [
+        "Squalane",
+        "Bisabolol"
+      ],
+      "types": [
+        "dry",
+        "sensitive",
+        "mature",
+        "dehydrated"
+      ],
+      "goals": [
+        "hydration",
+        "redness"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p03",
+      "category": "cleanser",
+      "name": {
+        "ru": "Мицеллярная вода «Soft»",
+        "en": "Soft micellar water"
+      },
+      "price": 2390,
+      "volume": "200 мл",
+      "actives": [
+        "Niacinamide"
+      ],
+      "types": [
+        "combo",
+        "sensitive",
+        "normal"
+      ],
+      "goals": [
+        "pores",
+        "redness"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p04",
+      "category": "toner",
+      "name": {
+        "ru": "Тонер «Hydra-Mist»",
+        "en": "Hydra-Mist toner"
+      },
+      "price": 2490,
+      "volume": "200 мл",
+      "actives": [
+        "Hyaluronic Acid",
+        "Panthenol"
+      ],
+      "types": [
+        "dry",
+        "dehydrated",
+        "sensitive",
+        "mature"
+      ],
+      "goals": [
+        "hydration",
+        "redness"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p05",
+      "category": "toner",
+      "name": {
+        "ru": "Тонер с азелаиновой кислотой",
+        "en": "Azelaic acid toner"
+      },
+      "price": 2690,
+      "volume": "150 мл",
+      "actives": [
+        "Azelaic Acid",
+        "Zinc PCA"
+      ],
+      "types": [
+        "oily",
+        "acne",
+        "combo"
+      ],
+      "goals": [
+        "acne",
+        "pigment",
+        "pores"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p05a",
+      "category": "serum",
+      "name": {
+        "ru": "Сыворотка «Hydra Lift» с гиалуроном",
+        "en": "Hydra Lift hyaluronic serum"
+      },
+      "price": 4290,
+      "volume": "30 мл",
+      "actives": [
+        "Hyaluronic 3 weights",
+        "B5"
+      ],
+      "types": [
+        "dry",
+        "dehydrated",
+        "mature",
+        "normal"
+      ],
+      "goals": [
+        "hydration",
+        "glow"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p06",
+      "category": "serum",
+      "name": {
+        "ru": "Сыворотка «Niacinamide 10»",
+        "en": "Niacinamide 10 serum"
+      },
+      "price": 4890,
+      "volume": "30 мл",
+      "actives": [
+        "Niacinamide 10%",
+        "Zn"
+      ],
+      "types": [
+        "oily",
+        "combo",
+        "acne"
+      ],
+      "goals": [
+        "pores",
+        "pigment",
+        "acne"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p07",
+      "category": "serum",
+      "name": {
+        "ru": "Сыворотка «Pigment Stop»",
+        "en": "Pigment Stop serum"
+      },
+      "price": 5290,
+      "volume": "30 мл",
+      "actives": [
+        "Tranexamic Acid",
+        "Vit C"
+      ],
+      "types": [
+        "normal",
+        "mature",
+        "combo"
+      ],
+      "goals": [
+        "pigment",
+        "glow"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p08",
+      "category": "serum",
+      "name": {
+        "ru": "Сыворотка «Retinal 0.05»",
+        "en": "Retinal 0.05 serum"
+      },
+      "price": 5990,
+      "volume": "30 мл",
+      "actives": [
+        "Retinaldehyde",
+        "Bakuchiol"
+      ],
+      "types": [
+        "mature",
+        "oily",
+        "combo"
+      ],
+      "goals": [
+        "antiage",
+        "pigment"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p09",
+      "category": "serum",
+      "name": {
+        "ru": "Сыворотка «Calm Cica»",
+        "en": "Calm Cica serum"
+      },
+      "price": 4490,
+      "volume": "30 мл",
+      "actives": [
+        "Centella Asiatica",
+        "Madecassoside"
+      ],
+      "types": [
+        "sensitive",
+        "dry",
+        "acne"
+      ],
+      "goals": [
+        "redness",
+        "acne"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p10",
+      "category": "serum",
+      "name": {
+        "ru": "Сыворотка «Peptide Lift»",
+        "en": "Peptide Lift serum"
+      },
+      "price": 5490,
+      "volume": "30 мл",
+      "actives": [
+        "Peptides Matrixyl",
+        "Argireline"
+      ],
+      "types": [
+        "mature",
+        "normal"
+      ],
+      "goals": [
+        "antiage",
+        "glow"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p11",
+      "category": "eye",
+      "name": {
+        "ru": "Крем для век «Bright Eye»",
+        "en": "Bright Eye cream"
+      },
+      "price": 3290,
+      "volume": "15 мл",
+      "actives": [
+        "Caffeine",
+        "Vit K"
+      ],
+      "types": [
+        "normal",
+        "mature",
+        "combo",
+        "dry"
+      ],
+      "goals": [
+        "eyes",
+        "antiage"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p12",
+      "category": "moist",
+      "name": {
+        "ru": "Крем «Moisture Veil»",
+        "en": "Moisture Veil cream"
+      },
+      "price": 3590,
+      "volume": "50 мл",
+      "actives": [
+        "Ceramides",
+        "Glycerin"
+      ],
+      "types": [
+        "dry",
+        "dehydrated",
+        "sensitive",
+        "mature"
+      ],
+      "goals": [
+        "hydration",
+        "redness"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p13",
+      "category": "moist",
+      "name": {
+        "ru": "Гель-крем «Aqua Light»",
+        "en": "Aqua Light gel-cream"
+      },
+      "price": 3290,
+      "volume": "50 мл",
+      "actives": [
+        "Hyaluronic",
+        "Squalane"
+      ],
+      "types": [
+        "oily",
+        "combo",
+        "acne",
+        "normal"
+      ],
+      "goals": [
+        "hydration",
+        "pores"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p14",
+      "category": "moist",
+      "name": {
+        "ru": "Крем «Lift Night»",
+        "en": "Lift Night cream"
+      },
+      "price": 4290,
+      "volume": "50 мл",
+      "actives": [
+        "Peptides",
+        "Shea"
+      ],
+      "types": [
+        "mature",
+        "dry",
+        "normal"
+      ],
+      "goals": [
+        "antiage",
+        "hydration"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p15",
+      "category": "spf",
+      "name": {
+        "ru": "SPF 50 «Daily Shield»",
+        "en": "SPF 50 Daily Shield"
+      },
+      "price": 3990,
+      "volume": "50 мл",
+      "actives": [
+        "Mineral filters",
+        "Vit E"
+      ],
+      "types": [
+        "normal",
+        "dry",
+        "mature",
+        "sensitive",
+        "combo",
+        "oily",
+        "acne",
+        "dehydrated"
+      ],
+      "goals": [
+        "antiage",
+        "pigment",
+        "redness",
+        "hydration",
+        "acne",
+        "glow",
+        "pores",
+        "eyes"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p16",
+      "category": "mask",
+      "name": {
+        "ru": "Маска «Clay Detox»",
+        "en": "Clay Detox mask"
+      },
+      "price": 2890,
+      "volume": "75 мл",
+      "actives": [
+        "Kaolin",
+        "Salicylic"
+      ],
+      "types": [
+        "oily",
+        "combo",
+        "acne"
+      ],
+      "goals": [
+        "pores",
+        "acne"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p17",
+      "category": "mask",
+      "name": {
+        "ru": "Маска «Hydra Sleep»",
+        "en": "Hydra Sleep mask"
+      },
+      "price": 2590,
+      "volume": "75 мл",
+      "actives": [
+        "Hyaluronic",
+        "Polyglutamic"
+      ],
+      "types": [
+        "dry",
+        "dehydrated",
+        "mature",
+        "sensitive",
+        "normal"
+      ],
+      "goals": [
+        "hydration",
+        "glow"
+      ],
+      "url": "",
+      "image": ""
+    },
+    {
+      "id": "p18",
+      "category": "exfoliant",
+      "name": {
+        "ru": "Эксфолиант «Glow AHA/BHA»",
+        "en": "Glow AHA/BHA exfoliant"
+      },
+      "price": 3490,
+      "volume": "30 мл",
+      "actives": [
+        "AHA 7%",
+        "BHA 1%"
+      ],
+      "types": [
+        "combo",
+        "oily",
+        "mature",
+        "normal"
+      ],
+      "goals": [
+        "pores",
+        "pigment",
+        "glow"
+      ],
+      "url": "",
+      "image": ""
+    }
+  ]
+}
