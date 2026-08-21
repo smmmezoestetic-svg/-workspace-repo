@@ -52,11 +52,37 @@ const ZONE_LANDMARKS = {
 };
 
 let __faceMeshLoaderPromise = null;
+// Куда сама библиотека потом ходит за wasm и моделью. Заполняется тем
+// источником, из которого удалось загрузить face_mesh.js, иначе библиотека
+// возьмёт файлы с CDN, даже если сама пришла из локальной папки.
+let __faceMeshBase = "";
+
+// Поддерживает ли браузер WebAssembly SIMD. Локально лежит только
+// SIMD-сборка wasm — она вдвое меньше комплекта из обеих, — поэтому
+// браузерам без SIMD локальная копия не подойдёт, и для них остаётся CDN.
+// Проверка: валиден ли крошечный модуль с SIMD-инструкцией.
+function hasWasmSimd() {
+  try {
+    return WebAssembly.validate(new Uint8Array([
+      0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123,
+      3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11,
+    ]));
+  } catch (e) {
+    return false;
+  }
+}
+
+// Локальная копия идёт первой. Детекция лица решает, пустить ли фото дальше,
+// поэтому зависеть в этом от чужого CDN нельзя: не загрузился — и проверять
+// лицо становится нечем. Файлы лежат рядом с виджетом, см.
+// public/vendor/mediapipe/README.txt.
 const FACEMESH_CDNS = [
-  "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js",
-  "https://unpkg.com/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js",
-  "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js",
+  "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/",
+  "https://unpkg.com/@mediapipe/face_mesh@0.4.1633559619/",
 ];
+const FACEMESH_SOURCES = hasWasmSimd()
+  ? [new URL("./vendor/mediapipe/", document.baseURI).href, ...FACEMESH_CDNS]
+  : FACEMESH_CDNS;
 function __loadScript(src) {
   return new Promise((resolve, reject) => {
     const s = document.createElement("script");
@@ -71,21 +97,28 @@ async function loadFaceMesh() {
   if (window.FaceMesh) return window.FaceMesh;
   if (__faceMeshLoaderPromise) return __faceMeshLoaderPromise;
   __faceMeshLoaderPromise = (async () => {
-    for (const url of FACEMESH_CDNS) {
+    for (const base of FACEMESH_SOURCES) {
       try {
-        await __loadScript(url);
+        await __loadScript(base + "face_mesh.js");
         if (window.FaceMesh) {
-          console.log("[analyzer] FaceMesh loaded from", url);
+          __faceMeshBase = base;
+          console.log("[analyzer] FaceMesh загружен из", base);
           return window.FaceMesh;
         }
       } catch (e) {
-        console.warn("[analyzer] FaceMesh CDN failed:", url);
+        console.warn("[analyzer] FaceMesh недоступен:", base);
       }
     }
-    console.warn("[analyzer] All FaceMesh CDNs failed — falling back to Vision-only");
+    console.warn("[analyzer] FaceMesh не загрузился ни из одного источника");
     return null;
   })();
   return __faceMeshLoaderPromise;
+}
+
+// Библиотека дозагружает wasm и модель сама — направляем её туда же,
+// откуда пришёл face_mesh.js.
+function faceMeshLocateFile(file) {
+  return __faceMeshBase + file;
 }
 
 function rgbToHsl(r, g, b) {
@@ -153,9 +186,7 @@ async function runFaceMesh(img) {
   const FM = await loadFaceMesh().catch(() => null);
   if (!FM) return null;
 
-  const fm = new FM({
-    locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/${f}`
-  });
+  const fm = new FM({ locateFile: faceMeshLocateFile });
   fm.setOptions({
     maxNumFaces: 1,
     refineLandmarks: true,
@@ -199,9 +230,7 @@ async function detectFaceLandmarks(img) {
   const FM = await loadFaceMesh().catch(() => null);
   if (!FM) return { available: false, found: false, timedOut: false };
 
-  const fm = new FM({
-    locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/${f}`
-  });
+  const fm = new FM({ locateFile: faceMeshLocateFile });
   fm.setOptions({ maxNumFaces: 1, refineLandmarks: false, minDetectionConfidence: 0.5 });
 
   return new Promise((resolve) => {
