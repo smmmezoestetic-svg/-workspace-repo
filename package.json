@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs --watch",
-    "check": "node build.mjs --check"
+    "check": "node build.mjs --check",
+    "preview": "node build.mjs && node build-preview.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"
